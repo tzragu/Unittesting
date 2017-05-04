@@ -13,12 +13,13 @@ class InvalidSocial(Exception):
 class InvalidPassword(Exception):
     pass
 
+
 class Email:
 
     def __init__(self, email):
-        search_Obj = re.search(r'[a-zA-Z]([a-zA-Z0-9]*)@([a-zA-Z0-9]*)\.edu|biz|com|gov', email, flags=0)
-        if search_Obj is not None:
-            self.email = search_Obj.group()
+        searchobj = re.search(r'^[a-zA-Z]([a-zA-Z0-9]*)@[a-zA-Z]([a-zA-Z0-9\.]*)\.(edu|biz|com|gov)$', email, flags=0)
+        if searchobj is not None:
+            self.email = email
         else:
             raise InvalidEmail
 
@@ -29,8 +30,9 @@ class Email:
 class SS:
 
     def __init__(self, social):
-        search_Obj = re.search(r'[0-9]{3}-[0-9]{2}-[0-9]{4}', social, flags=0)
-        if search_Obj is not None:
+        search_obj = re.search(r'^(?!219-09-9999|078-05-1120)(?!666|000|9\d{2})\d{3}-(?!00)\d{2}-(?!0{4})\d{4}$',
+                               social, flags=0)
+        if search_obj is not None:
             self.social = social
         else:
             raise InvalidSocial
@@ -58,6 +60,3 @@ class Hash:
     def generate_hash(passwd):
         """ This is NOT secure, a random salt should be added"""
         return hashlib.sha512(passwd.encode("utf-8")).hexdigest()
-
-    def __str__(self):
-        return self.hash
